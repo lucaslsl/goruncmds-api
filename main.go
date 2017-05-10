@@ -189,7 +189,7 @@ func TaskList(w http.ResponseWriter, r *http.Request, ps httprouter.Params) erro
 	var tasks []Task
 	var tmp Task
 	for _, t := range values {
-		if json.Unmarshal([]byte(t), &tmp); err == nil {
+		if err = json.Unmarshal([]byte(t), &tmp); err == nil {
 			tasks = append(tasks, tmp)
 		}
 	}
