@@ -1,0 +1,20 @@
+hash: 92ac99c5d10552f7f05d54e9fdf3509e6c45c370a4cae6b861ba1a0ccf51ce0f
+updated: 2017-05-09T23:43:35.035492085-03:00
+imports:
+- name: github.com/garyburd/redigo
+  version: 8873b2f1995f59d4bcdd2b0dc9858e2cb9bf0c13
+  subpackages:
+  - redis
+- name: github.com/julienschmidt/httprouter
+  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/namsral/flag
+  version: 7fa59bdb55485001d702d9b6e15367cdf26bfde8
+- name: github.com/rs/cors
+  version: a62a804a8a009876ca59105f7899938a1349f4b3
+- name: github.com/rs/xhandler
+  version: ed27b6fd65218132ee50cd95f38474a3d8a2cd12
+- name: golang.org/x/net
+  version: fcc8ed8e87ee07a511396864dad3960b9632e44f
+  subpackages:
+  - context
+testImports: []
