@@ -1,9 +1,10 @@
-hash: 92ac99c5d10552f7f05d54e9fdf3509e6c45c370a4cae6b861ba1a0ccf51ce0f
-updated: 2017-05-09T23:43:35.035492085-03:00
+hash: 331c0cd1135a09e04a159db206d11b1225d6b1ce4dccf2ff8757b3a15bda8449
+updated: 2017-05-10T01:08:09.678280434-03:00
 imports:
 - name: github.com/garyburd/redigo
   version: 8873b2f1995f59d4bcdd2b0dc9858e2cb9bf0c13
   subpackages:
+  - internal
   - redis
 - name: github.com/julienschmidt/httprouter
   version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
@@ -14,7 +15,7 @@ imports:
 - name: github.com/rs/xhandler
   version: ed27b6fd65218132ee50cd95f38474a3d8a2cd12
 - name: golang.org/x/net
-  version: fcc8ed8e87ee07a511396864dad3960b9632e44f
+  version: c9b681d35165f1995d6f3034e61f8761d4b90c99
   subpackages:
   - context
 testImports: []
