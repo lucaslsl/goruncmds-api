@@ -28,7 +28,7 @@ type Task struct {
 }
 
 var (
-	redisURL     = flag.String("redis_url", "redis://localhost:6379", "Redis Address")
+	redisURL     = flag.String("redis_url", "redis://localhost:6379", "Redis URL")
 	redisChannel = flag.String("redis_channel", "cmds_tasks", "Tasks Channel")
 	listenAddr   = flag.String("listen_address", ":8080", "Listen Address")
 	authKey      = flag.String("auth_key", "0z02sKnkfLczIlcsi8k5n4f3J7TXuc60", "Authentication Key")
