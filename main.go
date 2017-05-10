@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
 	"github.com/julienschmidt/httprouter"
-	"github.com/lucaslsl/goexeccmds-api/app"
+	"github.com/lucaslsl/goruncmds-api/app"
 	"github.com/namsral/flag"
 	"github.com/rs/cors"
 	"log"
