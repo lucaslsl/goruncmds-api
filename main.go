@@ -28,18 +28,18 @@ type Task struct {
 }
 
 var (
-	redisAddr    = flag.String("redis_address", "localhost:6379", "Redis Address")
+	redisURL     = flag.String("redis_url", "redis://localhost:6379", "Redis Address")
 	redisChannel = flag.String("redis_channel", "cmds_tasks", "Tasks Channel")
 	listenAddr   = flag.String("listen_address", ":8080", "Listen Address")
 	authKey      = flag.String("auth_key", "0z02sKnkfLczIlcsi8k5n4f3J7TXuc60", "Authentication Key")
 	redisPool    *redis.Pool
 )
 
-func newPool(addr string) *redis.Pool {
+func newPool(url string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     2,
 		IdleTimeout: 240 * time.Second,
-		Dial:        func() (redis.Conn, error) { return redis.Dial("tcp", addr) },
+		Dial:        func() (redis.Conn, error) { return redis.DialURL(url) },
 	}
 }
 
@@ -181,12 +181,16 @@ func TaskList(w http.ResponseWriter, r *http.Request, ps httprouter.Params) erro
 		tasksToFetch = append(tasksToFetch, k)
 	}
 
-	values, err := redis.Strings(redisConn.Do("MGET", tasksToFetch...))
-	if err != nil {
-		return err
+	var values []string
+
+	if len(tasksToFetch) > 0 {
+		values, err = redis.Strings(redisConn.Do("MGET", tasksToFetch...))
+		if err != nil {
+			return err
+		}
 	}
 
-	var tasks []Task
+	tasks := []Task{}
 	var tmp Task
 	for _, t := range values {
 		if err = json.Unmarshal([]byte(t), &tmp); err == nil {
@@ -225,8 +229,12 @@ func RunTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) error
 	return nil
 }
 
+func init() {
+	flag.Parse()
+}
+
 func main() {
-	redisPool = newPool(*redisAddr)
+	redisPool = newPool(*redisURL)
 	app := app.New()
 	app.POST("/tasks", IsAuthenticated, CreateTask)
 	app.GET("/tasks", IsAuthenticated, TaskList)
