@@ -236,12 +236,12 @@ func init() {
 func main() {
 	redisPool = newPool(*redisURL)
 	app := app.New()
-	app.POST("/tasks", IsAuthenticated, CreateTask)
-	app.GET("/tasks", IsAuthenticated, TaskList)
-	app.GET("/tasks/:taskID", IsAuthenticated, RetrieveTask)
-	app.PATCH("/tasks/:taskID", IsAuthenticated, UpdateTask)
-	app.DELETE("/tasks/:taskID", IsAuthenticated, DeleteTask)
-	app.PUT("/tasks/:taskID/run", IsAuthenticated, RunTask)
+	app.POST("/api/v1/tasks", IsAuthenticated, CreateTask)
+	app.GET("/api/v1/tasks", IsAuthenticated, TaskList)
+	app.GET("/api/v1/tasks/:taskID", IsAuthenticated, RetrieveTask)
+	app.PATCH("/api/v1/tasks/:taskID", IsAuthenticated, UpdateTask)
+	app.DELETE("/api/v1/tasks/:taskID", IsAuthenticated, DeleteTask)
+	app.PUT("/api/v1/tasks/:taskID/run", IsAuthenticated, RunTask)
 	handler := cors.Default().Handler(app.Router)
 	log.Fatal(http.ListenAndServe(*listenAddr, handler))
 }
