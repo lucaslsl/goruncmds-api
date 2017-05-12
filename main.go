@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
+	"github.com/imdario/mergo"
 	"github.com/julienschmidt/httprouter"
 	"github.com/lucaslsl/goruncmds-api/app"
 	"github.com/namsral/flag"
@@ -112,20 +113,26 @@ func UpdateTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) er
 		return app.ErrorResponse{http.StatusNotFound,
 			app.ErrNotFound, []app.ErrorResponseDetail{}}
 	}
-	var task Task
+	task := Task{}
 	err = json.Unmarshal([]byte(t), &task)
 	if err != nil {
 		return err
 	}
 
-	var taskUpdated Task
-	err = app.ParseRequestBody(r, &taskUpdated)
+	values := Task{}
+	err = app.ParseRequestBody(r, &values)
 	if err != nil {
 		return err
 	}
-	taskUpdated.ID = task.ID
+	originalID := task.ID
 
-	taskUpdatedJson, _ := json.Marshal(taskUpdated)
+	if err := mergo.MergeWithOverwrite(&task, values); err != nil {
+		return err
+	}
+
+	task.ID = originalID
+
+	taskUpdatedJson, _ := json.Marshal(task)
 	_, err = redisConn.Do("SET", redisKey, string(taskUpdatedJson))
 	if err != nil {
 		return err
