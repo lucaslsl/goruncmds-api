@@ -23,7 +23,6 @@ type Task struct {
 	ID           string            `json:"id"`
 	Name         string            `json:"name"`
 	Instructions []TaskInstruction `json:"instructions"`
-	ServersIDs   []string          `json:"servers_ids"`
 	ServersRoles []string          `json:"servers_roles"`
 }
 
@@ -208,18 +207,43 @@ func TaskList(w http.ResponseWriter, r *http.Request, ps httprouter.Params) erro
 }
 
 func RunTask(w http.ResponseWriter, r *http.Request, ps httprouter.Params) error {
+
+	serversIDs := []string{}
+
+	sids := r.URL.Query()["servers_ids"]
+	sids1 := r.URL.Query()["servers_ids[]"]
+
+	if len(sids) > 0 {
+		serversIDs = sids
+	} else if len(sids1) > 0 {
+		serversIDs = sids1
+	}
+
+	var task struct {
+		Task
+		ServersIDs []string `json:"servers_ids"`
+	}
+
 	redisConn := redisPool.Get()
 	defer redisConn.Close()
 
 	redisKey := "task:" + ps.ByName("taskID")
 
-	task, err := redis.String(redisConn.Do("GET", redisKey))
+	t, err := redis.String(redisConn.Do("GET", redisKey))
 	if err != nil {
 		return app.ErrorResponse{http.StatusNotFound,
 			app.ErrNotFound, []app.ErrorResponseDetail{}}
 	}
 
-	_, err = redisConn.Do("PUBLISH", *redisChannel, task)
+	err = json.Unmarshal([]byte(t), &task)
+	if err != nil {
+		return err
+	}
+	task.ServersIDs = serversIDs
+
+	taskJSON, _ := json.Marshal(task)
+
+	_, err = redisConn.Do("PUBLISH", *redisChannel, string(taskJSON))
 	if err != nil {
 		return err
 	}
