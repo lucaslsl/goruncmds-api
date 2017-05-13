@@ -272,7 +272,7 @@ func main() {
 	app.GET("/api/v1/tasks/:taskID", IsAuthenticated, RetrieveTask)
 	app.PATCH("/api/v1/tasks/:taskID", IsAuthenticated, UpdateTask)
 	app.DELETE("/api/v1/tasks/:taskID", IsAuthenticated, DeleteTask)
-	app.PUT("/api/v1/tasks/:taskID/run", IsAuthenticated, RunTask)
+	app.POST("/api/v1/tasks/:taskID/run", IsAuthenticated, RunTask)
 	handler := cors.Default().Handler(app.Router)
 	log.Fatal(http.ListenAndServe(*listenAddr, handler))
 }
